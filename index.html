@@ -17,6 +17,7 @@ footer{position:fixed;left:0;right:0;bottom:max(4px,env(safe-area-inset-bottom))
 <app-icon data-id="1" hidden="" data-icon="zap" data-palette="Red"></app-icon>
 <canvas data-id="2" id="gc" width="480" height="640" tabindex="0" aria-label="SYNTHBREAK game canvas"></canvas>
 <footer data-id="3">Created by Andrew Cole</footer>
+<script>var vpArcadeRun=null;function vpArcadeSend(data){if(window.parent===window)return;for(var origin of ['https://venomouspress.com','https://www.venomouspress.com'])window.parent.postMessage(data,origin);}</script>
 <script>
 (function(){
 // IMMEDIATE PAINT
@@ -669,6 +670,7 @@ function applyPowerup(pu){
 
 // High scores
 function saveHighScore(){
+  vpArcadeSend({type:'vp-arcade-score',game:'synthbreak',run:vpArcadeRun,mode:mode,score:score,zone:zone});
   try{
     var scores=JSON.parse(localStorage.getItem('synthbreak_scores')||'[]');
     scores.push({score:score,mode:mode,zone:zone,date:new Date().toISOString().split('T')[0]});
@@ -1883,6 +1885,7 @@ function renderShop(){
 
 // === START GAME ===
 function startGame(){
+  vpArcadeRun=crypto.randomUUID();vpArcadeSend({type:'vp-arcade-start',game:'synthbreak',run:vpArcadeRun,mode:mode});
   score=0;level=0;zone=1;combo=0;lastBreakTime=0;
   lives=mode==='normal'?5:3;
   particles=[];floatingTexts=[];activePowerups=[];
